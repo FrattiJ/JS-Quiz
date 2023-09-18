@@ -1,12 +1,17 @@
 const startButton = document.getElementById('start-btn')
+const scoreButton = document.getElementById('highScore-btn')
+const scoresElement = document.getElementById('scores')
 const nextButton = document.getElementById('next-btn')
 const questionContainerElement = document.getElementById('question-container')
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById('answer-buttons')
 
+var score = 0;
+
 let shuffledQuestions, currentQuestionIndex
 
 startButton.addEventListener('click', startGame)
+scoreButton.addEventListener('click', highScore)
 nextButton.addEventListener('click', () => {
   currentQuestionIndex++
   setNextQuestion()
@@ -14,15 +19,21 @@ nextButton.addEventListener('click', () => {
 
 function startGame() {
   startButton.classList.add('hide')
+  scoreButton.classList.add('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
   questionContainerElement.classList.remove('hide')
   setNextQuestion()
 }
 
+function highScore() {
+  scoreButton.classList.add('hide')
+}
+
 function setNextQuestion() {
   resetState()
   showQuestion(shuffledQuestions[currentQuestionIndex])
+
 }
 
 function showQuestion(question) {
@@ -54,11 +65,17 @@ function selectAnswer(e) {
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
+  if (correct) {
+    score++;
+    console.log(score);
+  }
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
+    scoreButton.classList.remove('hide')
+    score = 0
   }
 }
 
@@ -68,6 +85,7 @@ function setStatusClass(element, correct) {
     element.classList.add('correct')
   } else {
     element.classList.add('wrong')
+    // take time away
   }
 }
 
@@ -78,19 +96,17 @@ function clearStatusClass(element) {
 
 const questions = [
   {
-    question: 'What is 2 + 2?',
+    question: 'How much wood could a wood check chuck if a wood chuck could chuck wood?',
     answers: [
-      { text: '4', correct: true },
-      { text: '22', correct: false }
+      { text: 'None', correct: true },
+      { text: 'At least 3', correct: false }
     ]
   },
   {
-    question: 'Who is the best YouTuber?',
+    question: 'How confused was a making this?',
     answers: [
-      { text: 'Web Dev Simplified', correct: true },
-      { text: 'Traversy Media', correct: true },
-      { text: 'Dev Ed', correct: true },
-      { text: 'Fun Fun Function', correct: true }
+      { text: 'Very', correct: true },
+      { text: 'Not at all', correct: false }
     ]
   },
   {
@@ -103,10 +119,11 @@ const questions = [
     ]
   },
   {
-    question: 'What is 4 * 2?',
+    question: 'What plaent do we live on?',
     answers: [
-      { text: '6', correct: false },
-      { text: '8', correct: true }
+      { text: 'Mars', correct: false },
+      { text: 'Earth', correct: true },
+      { text: 'Venus', correct: false }
     ]
   }
 ]
